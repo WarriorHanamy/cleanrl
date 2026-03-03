@@ -41,11 +41,11 @@ class Args:
     seed: int = 1
     """seed of the experiment"""
     track: bool = False
-    """if toggled, this experiment will be tracked with Weights and Biases"""
-    wandb_project_name: str = "cleanRL"
-    """the wandb's project name"""
-    wandb_entity: str = None
-    """the entity (team) of wandb's project"""
+    """if toggled, this experiment will be tracked with SwanLab"""
+    swanlab_project_name: str = "cleanRL"
+    """the swanlab's project name"""
+    swanlab_entity: str = None
+    """the entity (team) of swanlab's project"""
     capture_video: bool = False
     """whether to capture videos of the agent performances (check out `videos` folder)"""
     save_model: bool = False
@@ -194,17 +194,15 @@ if __name__ == "__main__":
         args.teacher_policy_hf_repo = f"cleanrl/{args.env_id}-{args.teacher_model_exp_name}-seed1"
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
     if args.track:
-        import wandb
+        import swanlab
 
-        wandb.init(
-            project=args.wandb_project_name,
-            entity=args.wandb_entity,
-            sync_tensorboard=True,
+        swanlab.init(
+            project=args.swanlab_project_name,
+            entity=args.swanlab_entity,
             config=vars(args),
             name=run_name,
-            monitor_gym=True,
-            save_code=True,
         )
+        swanlab.sync_tensorboard_torch()
     writer = SummaryWriter(f"runs/{run_name}")
     writer.add_text(
         "hyperparameters",

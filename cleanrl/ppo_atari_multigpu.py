@@ -37,11 +37,11 @@ class Args:
     cuda: bool = True
     """if toggled, cuda will be enabled by default"""
     track: bool = False
-    """if toggled, this experiment will be tracked with Weights and Biases"""
-    wandb_project_name: str = "cleanRL"
-    """the wandb's project name"""
-    wandb_entity: str = None
-    """the entity (team) of wandb's project"""
+    """if toggled, this experiment will be tracked with SwanLab"""
+    swanlab_project_name: str = "cleanRL"
+    """the swanlab's project name"""
+    swanlab_entity: str = None
+    """the entity (team) of swanlab's project"""
     capture_video: bool = False
     """whether to capture videos of the agent performances (check out `videos` folder)"""
 
@@ -185,17 +185,15 @@ E.g., `torchrun --standalone --nnodes=1 --nproc_per_node=2 ppo_atari_multigpu.py
     writer = None
     if local_rank == 0:
         if args.track:
-            import wandb
+        import swanlab
 
-            wandb.init(
-                project=args.wandb_project_name,
-                entity=args.wandb_entity,
-                sync_tensorboard=True,
-                config=vars(args),
-                name=run_name,
-                monitor_gym=True,
-                save_code=True,
-            )
+        swanlab.init(
+            project=args.swanlab_project_name,
+            entity=args.swanlab_entity,
+            config=vars(args),
+            name=run_name,
+        )
+        swanlab.sync_tensorboard_torch()
         writer = SummaryWriter(f"runs/{run_name}")
         writer.add_text(
             "hyperparameters",
@@ -400,4 +398,4 @@ E.g., `torchrun --standalone --nnodes=1 --nproc_per_node=2 ppo_atari_multigpu.py
     if local_rank == 0:
         writer.close()
         if args.track:
-            wandb.finish()
+            swanlab.finish()

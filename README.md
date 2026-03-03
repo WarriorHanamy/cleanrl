@@ -28,13 +28,13 @@ uv run python cleanrl/ppo.py \
 tensorboard --logdir runs
 ```
 
-To use experiment tracking with wandb, run
+To use experiment tracking with swanlab, run
 ```bash
-wandb login # only required for the first time
+swanlab login # only required for the first time
 uv run python cleanrl/ppo.py \
     --seed 1 \
     --env-id CartPole-v0 \
     --total-timesteps 50000 \
     --track \
-    --wandb-project-name cleanrltest
+    --swanlab-project-name cleanrltest
 ```
