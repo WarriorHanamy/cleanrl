@@ -9,7 +9,7 @@ Prerequisites:
 To run experiments locally, give the following a try:
 
 ```bash
-uv run python cleanrl/ppo.py \
+./agent_bins/python cleanrl/ppo.py \
     --seed 1 \
     --env-id CartPole-v0 \
     --total-timesteps 50000
@@ -21,7 +21,7 @@ tensorboard --logdir runs
 To use experiment tracking with swanlab, run
 ```bash
 swanlab login # only required for the first time
-uv run python cleanrl/ppo.py \
+./agent_bins/python cleanrl/ppo.py \
     --seed 1 \
     --env-id CartPole-v0 \
     --total-timesteps 50000 \
