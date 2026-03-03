@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Python entry point wrapper.
+
+set -euo pipefail
+
+# Always use uv run (uses project's Python version)
+readonly PYTHON_CMD="uv run --no-sync python"
+
+# Function: print_paths_info
+# Description: Print Python environment information
+# Used when --print-paths flag is provided
+print_paths_info() {
+    echo "=== Python Entry Point Paths ==="
+    echo "PYTHON_CMD: uv run --no-sync python"
+    echo "PYTHONPATH: ${PYTHONPATH:-<not set>}"
+    echo "================================"
+}
+
+# Check if no arguments provided - print paths by default
+if [ $# -eq 0 ]; then
+    print_paths_info
+    exit 0
+fi
+
+# Check if --print-paths flag is provided
+print_paths_flag=false
+new_args=()
+for arg in "$@"; do
+    if [ "$arg" == "--print-paths" ]; then
+        print_paths_flag=true
+    else
+        new_args+=("$arg")
+    fi
+done
+
+if [ "$print_paths_flag" = true ]; then
+    print_paths_info
+    # If --print-paths was the only flag, exit with success
+    if [ ${#new_args[@]} -eq 0 ]; then
+        exit 0
+    fi
+    # Otherwise, execute with remaining arguments
+    exec $PYTHON_CMD "${new_args[@]}"
+fi
+
+# Run target script with appropriate Python wrapper
+exec $PYTHON_CMD "$@"
